@@ -1,4 +1,9 @@
 {
   "name": "ExpenseTracker",
-  "displayName": "ExpenseTracker"
+  "displayName": "ExpenseTracker",
+  "extra": {
+    "eas": {
+      "projectId": "c5f3c94e-1855-4524-ac25-f45e438df19b"
+    }
+  }
 }

@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
-import {primaryColor, globalStyle} from '../utils/GlobalStyle';
-import {postService} from '../utils/Api';
+import { primaryColor, globalStyle } from '../utils/GlobalStyle';
+import { postService } from '../utils/Api';
 import Loading from '../components/Loading';
 
-const LoginScreen = ({navigation, handleToken}) => {
-  let initialState = {email: '', password: ''};
+const LoginScreen = ({ navigation, handleToken }) => {
+  let initialState = { email: '', password: '' };
   const [data, setData] = useState(initialState);
   const [errMsg, setErrMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (key, value) => {
-    setData({...data, [key]: value});
+    setData({ ...data, [key]: value });
   };
 
   const handleSubmit = async () => {
@@ -33,6 +33,21 @@ const LoginScreen = ({navigation, handleToken}) => {
       handleToken('Bearer '.concat(res.token));
     } else {
       if (res !== 'Network Error') setErrMsg('Invalid credentials');
+      else setErrMsg('You are not connected to the internet.');
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    setErrMsg('');
+
+    const res = await postService('DEMO_LOGIN_API', '', {});
+    if (res.token !== undefined) {
+      setIsLoading(false);
+      handleToken('Bearer '.concat(res.token));
+    } else {
+      if (res !== 'Network Error') setErrMsg('Demo login failed');
       else setErrMsg('You are not connected to the internet.');
       setIsLoading(false);
     }
@@ -75,6 +90,13 @@ const LoginScreen = ({navigation, handleToken}) => {
           )}
 
           <FormButton buttonTitle="Sign In" onPress={() => handleSubmit()} />
+
+          <Text style={styles.demoText}>Don't want to sign up yet?</Text>
+          <FormButton
+            buttonTitle="Try Demo"
+            onPress={() => handleDemoLogin()}
+            style={styles.demoButton}
+          />
 
           <TouchableOpacity
             style={styles.forgotButton}
@@ -120,5 +142,16 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: primaryColor,
     fontFamily: 'Lato-Regular',
+  },
+  demoText: {
+    textAlign: 'center',
+    marginTop: 15,
+    color: '#666',
+    fontSize: 14,
+    fontFamily: 'Lato-Regular',
+  },
+  demoButton: {
+    backgroundColor: '#6c757d',
+    marginTop: 5,
   },
 });

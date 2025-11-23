@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://expense-tracker-api-fm78.onrender.com/';
+const baseUrl = 'https://expense-tracker-app-gamma-swart.vercel.app/';
 
 const requests = {
   LOGIN_API: 'api/users/login/',

@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
 const usersRouter = require('../routes/users');
 const categoriesRouter = require('../routes/categories');
@@ -14,38 +13,62 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
+// MongoDB connection with caching for serverless
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense-tracker';
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+let cachedDb = null;
+
+async function connectToDatabase() {
+    if (cachedDb) {
+        return cachedDb;
+    }
+
+    try {
+        const connection = await mongoose.connect(MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000,
+        });
+
+        cachedDb = connection;
+        console.log('MongoDB connected');
+        return connection;
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        throw error;
+    }
+}
 
 // Routes
-app.get('/', (req, res) => {
-    res.json({ message: 'Expense Tracker API is running!' });
+app.get('/', async (req, res) => {
+    try {
+        await connectToDatabase();
+        res.json({ message: 'Expense Tracker API is running!' });
+    } catch (error) {
+        res.status(500).json({ message: 'API is running but database connection failed', error: error.message });
+    }
 });
 
-app.use('/api/users', usersRouter);
-app.use('/api/categories', categoriesRouter);
-app.use('/api/categories', transactionsRouter);
+app.use('/api/users', async (req, res, next) => {
+    await connectToDatabase();
+    usersRouter(req, res, next);
+});
+
+app.use('/api/categories', async (req, res, next) => {
+    await connectToDatabase();
+    categoriesRouter(req, res, next);
+});
+
+app.use('/api/categories', async (req, res, next) => {
+    await connectToDatabase();
+    transactionsRouter(req, res, next);
+});
 
 // Error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res.status(500).json({ error: 'Something went wrong!', details: err.message });
 });
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
 
 // Export for Vercel
 module.exports = app;

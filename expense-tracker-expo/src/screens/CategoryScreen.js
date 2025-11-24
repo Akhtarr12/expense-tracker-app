@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import CategoryModal from '../components/CategoryModal';
 import Loading from '../components/Loading';
 import { windowWidth } from '../utils/Dimentions';
@@ -12,7 +11,6 @@ import {
   textColor,
   backgroundColor,
   surfaceColor,
-  gradientColors,
   secondaryColor,
 } from '../utils/GlobalStyle';
 
@@ -23,9 +21,9 @@ const CategoryScreen = ({
   updateCategory,
 }) => {
   let initialState = {
-    title: '',
-    description: '',
-    color: '#FF5733', // Default color
+    name: '',
+    color: '#2196F3', // Default Blue
+    type: 'expense', // Default type
   };
 
   const [errMsg, setErrMsg] = useState('');
@@ -41,7 +39,7 @@ const CategoryScreen = ({
     } else {
       setData(
         categories.filter(
-          item => item.title.toLowerCase().indexOf(text.toLowerCase()) !== -1,
+          item => item.name.toLowerCase().indexOf(text.toLowerCase()) !== -1,
         ),
       );
     }
@@ -58,8 +56,8 @@ const CategoryScreen = ({
   };
 
   const handleSubmit = async () => {
-    if (payload.title.trim() === '') {
-      setErrMsg('Please enter a title.');
+    if (payload.name.trim() === '') {
+      setErrMsg('Please enter a name.');
       return;
     }
 
@@ -136,18 +134,18 @@ const CategoryScreen = ({
           alignItems: 'center',
         }}>
         <View style={[styles.color, { backgroundColor: item.color }]} />
-        <Text style={{ color: textColor, fontSize: 16, fontWeight: '500' }}>{item.title}</Text>
+        <Text style={{ color: textColor, fontSize: 16, fontWeight: '500' }}>{item.name}</Text>
       </View>
       <View style={styles.iconsContainer}>
         <Icon
           size={24}
-          color="#0096FF"
+          color="#1E88E5"
           name="pencil-outline"
           onPress={() => handleUpdate(item)}
         />
         <Icon
           size={24}
-          color="#D11A2A"
+          color="#D32F2F"
           name="trash-can-outline"
           onPress={() => handleDelete(item.id)}
         />
@@ -156,7 +154,7 @@ const CategoryScreen = ({
   );
 
   return (
-    <LinearGradient colors={gradientColors} style={styles.container}>
+    <View style={styles.container}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Loading />
@@ -181,7 +179,7 @@ const CategoryScreen = ({
                   onChangeText={text => handleSearch(text)}
                 />
                 <Button
-                  buttonColor={secondaryColor}
+                  buttonColor={primaryColor}
                   mode="contained"
                   style={{ alignSelf: 'center', borderRadius: 20 }}
                   labelStyle={{ color: '#fff' }}
@@ -205,7 +203,7 @@ const CategoryScreen = ({
           )}
         </>
       )}
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -214,6 +212,8 @@ export default CategoryScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: backgroundColor,
+    paddingHorizontal: 16,
   },
   header: {
     flexDirection: 'row',
@@ -225,22 +225,24 @@ const styles = StyleSheet.create({
     color: textColor,
     borderBottomWidth: 1,
     width: windowWidth / 1.4,
-    borderBottomColor: '#D3D3D3',
+    borderBottomColor: '#BDBDBD',
     fontSize: 17,
   },
   card: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: surfaceColor,
-    borderRadius: 16,
+    borderRadius: 12,
     marginTop: 10,
     marginHorizontal: 10,
     padding: 5,
-    elevation: 3,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 2,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   color: {
     marginRight: 10,

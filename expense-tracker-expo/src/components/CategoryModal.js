@@ -24,18 +24,12 @@ const CategoryModal = ({
             <View style={{ padding: 20 }}>
               <TextInput
                 style={styles.input}
-                value={payload.title}
-                placeholder="Title"
+                value={payload.name}
+                placeholder="Category Name"
                 placeholderTextColor="grey"
-                onChangeText={text => handleChange('title', text)}
+                onChangeText={text => handleChange('name', text)}
               />
-              <TextInput
-                style={styles.input}
-                value={payload.description}
-                placeholder="Description"
-                placeholderTextColor="grey"
-                onChangeText={text => handleChange('description', text)}
-              />
+              {/* Type selection could go here, defaulting to 'expense' for now */}
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Button
@@ -66,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)', // Dim background
   },
   modalView: {
     margin: 20,
@@ -96,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 10,
     width: windowWidth / 1.5,
+    paddingVertical: 10,
   },
   button: {
     width: '50%',

@@ -151,11 +151,8 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff', // White text on gradient
+    color: primaryColor, // Blue text
     fontFamily: 'Roboto',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
   },
   fab: {
     position: 'absolute',

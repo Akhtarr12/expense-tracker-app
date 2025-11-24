@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
 
-// Premium Wine & Gold Theme
-export const primaryColor = '#722F37'; // Wine / Deep Burgundy
-export const secondaryColor = '#D4AF37'; // Gold
-export const accentColor = '#501B1D'; // Darker Wine
-export const backgroundColor = '#F9F5F6'; // Very soft pinkish white
-export const surfaceColor = '#FFFFFF'; // White cards
-export const textColor = '#2C0E10'; // Dark Wine/Black
-export const errorColor = '#C0392B'; // Strong Red
+// Light Blue & White Theme (High Visibility)
+export const primaryColor = '#1E88E5'; // Blue
+export const secondaryColor = '#FFC107'; // Amber/Gold
+export const accentColor = '#1565C0'; // Darker Blue
+export const backgroundColor = '#FFFFFF'; // White
+export const surfaceColor = '#F5F5F5'; // Light Grey
+export const textColor = '#000000'; // Black
+export const errorColor = '#D32F2F'; // Red
 
-export const gradientColors = ['#722F37', '#501B1D']; // Wine Gradient
+export const gradientColors = ['#FFFFFF', '#FFFFFF']; // No gradient (White)
 
 export const globalStyle = StyleSheet.create({
   error: {
@@ -26,39 +26,39 @@ export const globalStyle = StyleSheet.create({
   },
   card: {
     backgroundColor: surfaceColor,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     marginVertical: 8,
-    shadowColor: '#722F37', // Wine shadow
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(114, 47, 55, 0.1)', // Subtle wine border
+    borderColor: '#E0E0E0',
   },
   titleText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     color: textColor,
     marginBottom: 8,
   },
   subText: {
     fontSize: 14,
-    color: '#7F8C8D', // Grey
+    color: '#757575', // Grey
   },
 });
 
-// Premium Category Colors (Muted/Elegant)
+// Standard Category Colors
 export const categoryColors = [
-  '#722F37', // Wine
-  '#D4AF37', // Gold
-  '#2C3E50', // Navy
-  '#E67E22', // Bronze
-  '#27AE60', // Emerald
-  '#8E44AD', // Plum
-  '#C0392B', // Rust
-  '#16A085', // Teal
-  '#7F8C8D', // Slate
-  '#F1C40F', // Yellow Gold
+  '#F44336', // Red
+  '#E91E63', // Pink
+  '#9C27B0', // Purple
+  '#673AB7', // Deep Purple
+  '#3F51B5', // Indigo
+  '#2196F3', // Blue
+  '#03A9F4', // Light Blue
+  '#00BCD4', // Cyan
+  '#009688', // Teal
+  '#4CAF50', // Green
 ];

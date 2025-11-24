@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://expense-tracker-api-fm78.onrender.com/';
+const baseUrl = 'https://expense-tracker-app-gamma-swart.vercel.app/';
 
 const requests = {
   LOGIN_API: 'api/users/login/',
@@ -13,8 +13,8 @@ const getService = async (method, token, id = null) => {
   let url = baseUrl.concat(requests[method]);
   if (id !== null) url.concat(id).concat('/');
 
-  console.log({url});
-  console.log({token});
+  console.log({ url });
+  console.log({ token });
 
   try {
     const res = await axios.get(url, {
@@ -40,9 +40,9 @@ const postService = async (method, token, data, id = null) => {
       .concat(requests['TRANSACTIONS_API']);
   } else url = url.concat(requests[method]);
 
-  console.log({url});
-  console.log({data});
-  console.log({token});
+  console.log({ url });
+  console.log({ data });
+  console.log({ token });
 
   try {
     const res = await axios.post(url, data, {
@@ -55,8 +55,8 @@ const postService = async (method, token, data, id = null) => {
   } catch (err) {
     if (method !== 'LOGIN_API' && method !== 'REGISTER_API') return null;
     if (!err.response) return 'Network Error';
-    const {error} = err.response.data;
-    return {error};
+    const { error } = err.response.data;
+    return { error };
   }
 };
 
@@ -70,9 +70,9 @@ const putService = async (method, token, data, categoryId, transactionId) => {
       .concat(transactionId);
   } else url = url.concat(requests[method]).concat(categoryId);
 
-  console.log({url});
-  console.log({data});
-  console.log({token});
+  console.log({ url });
+  console.log({ data });
+  console.log({ token });
 
   try {
     const res = await axios.put(url, data, {
@@ -98,9 +98,9 @@ const deleteService = async (method, token, categoryId, transactionId) => {
       .concat(transactionId);
   } else url = url.concat(requests[method]).concat(categoryId);
 
-  console.log({url});
-  console.log({categoryId});
-  console.log({token});
+  console.log({ url });
+  console.log({ categoryId });
+  console.log({ token });
 
   try {
     const res = await axios.delete(url, {
@@ -116,4 +116,4 @@ const deleteService = async (method, token, categoryId, transactionId) => {
   }
 };
 
-export {getService, postService, putService, deleteService};
+export { getService, postService, putService, deleteService };

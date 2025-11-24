@@ -38,9 +38,14 @@ const SignupScreen = ({ navigation, handleToken }) => {
       return;
     }
 
-    delete data.confirmPassword;
+    // Prepare payload for backend
+    const payload = {
+      name: `${data.firstName.trim()} ${data.lastName.trim()}`,
+      email: data.email,
+      password: data.password,
+    };
 
-    const res = await postService('REGISTER_API', '', data);
+    const res = await postService('REGISTER_API', '', payload);
     if (res.token !== undefined) {
       setData(initialState);
       setIsLoading(false);

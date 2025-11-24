@@ -11,7 +11,7 @@ import moment from 'moment';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDeviceOrientation } from '@react-native-community/hooks';
 import Loading from '../components/Loading';
-import { primaryColor, textColor } from '../utils/GlobalStyle';
+import { primaryColor, textColor, backgroundColor, surfaceColor } from '../utils/GlobalStyle';
 import ExportToExcel from '../utils/ExportToExcel';
 import TransactionModal from '../components/TransactionModal';
 import DateTypeSelection from '../components/DateTypeSelection';
@@ -192,7 +192,7 @@ const AllTransactionsScreen = ({
   );
 
   return (
-    <>
+    <View style={styles.container}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Loading />
@@ -241,21 +241,25 @@ const AllTransactionsScreen = ({
           )}
         </>
       )}
-    </>
+    </View>
   );
 };
 
 export default AllTransactionsScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+  },
   footer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#D3D3D3',
-    backgroundColor: '#fff',
+    borderTopColor: '#E5E7EB',
+    backgroundColor: surfaceColor,
   },
   sortButtons: {
     paddingVertical: 10,
@@ -263,62 +267,69 @@ const styles = StyleSheet.create({
   },
   buttonDivider: {
     borderRightWidth: 1,
-    borderRightColor: '#D3D3D3',
+    borderRightColor: '#E5E7EB',
   },
   footerText: {
     color: textColor,
     textAlign: 'center',
+    fontWeight: '500',
   },
   dateContainer: {
     flex: 2,
-    backgroundColor: '#fff',
+    backgroundColor: surfaceColor,
     marginVertical: 10,
     marginHorizontal: 15,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 10,
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   dataContainer: {
     flex: 12,
     marginHorizontal: 15,
     marginBottom: 10,
   },
-  dataItems: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    marginHorizontal: 25,
-  },
   card: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginVertical: 5,
-    borderRadius: 10,
+    backgroundColor: surfaceColor,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginVertical: 6,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   text: {
     color: textColor,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   cardDate: {
-    flex: 1,
+    flex: 1.2,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   divider: {
     borderRightWidth: 1,
-    marginVertical: 3,
-    marginHorizontal: 5,
-    borderColor: '#D3D3D3',
+    height: '80%',
+    marginHorizontal: 10,
+    borderColor: '#E5E7EB',
   },
   cardText: {
-    flex: 6,
-    marginLeft: 3,
+    flex: 4,
+    justifyContent: 'center',
   },
   cardAmount: {
     flex: 2,
     alignItems: 'flex-end',
+    justifyContent: 'center',
   },
 });

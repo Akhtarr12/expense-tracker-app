@@ -11,6 +11,9 @@ import {
   primaryColor,
   secondaryColor,
   textColor,
+  backgroundColor,
+  surfaceColor,
+  accentColor,
 } from '../utils/GlobalStyle';
 
 const AddTransactionScreen = ({
@@ -139,7 +142,7 @@ const AddTransactionScreen = ({
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       {isLoading ? (
         <View>
           <Loading />
@@ -334,38 +337,48 @@ const AddTransactionScreen = ({
 export default AddTransactionScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor,
+  },
   heading: {
     color: textColor,
     fontSize: 18,
     marginBottom: 5,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   amountField: {
-    backgroundColor: '#fff',
-    width: 100,
+    backgroundColor: surfaceColor,
+    width: 120,
     borderBottomWidth: 2,
-    fontSize: 20,
+    borderBottomColor: primaryColor,
+    fontSize: 24,
     textAlign: 'center',
     color: textColor,
+    borderRadius: 8,
+    paddingVertical: 8,
   },
   categoryBox: {
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 12,
     marginVertical: 5,
     width: 85,
-    backgroundColor: '#fff',
+    backgroundColor: surfaceColor,
+    elevation: 2,
   },
   addCategoryBox: {
-    borderRadius: 10,
+    borderRadius: 12,
     marginVertical: 5,
     justifyContent: 'center',
     padding: 2,
-    backgroundColor: 'grey',
+    backgroundColor: secondaryColor,
+    elevation: 2,
   },
   categoryText: {
     color: textColor,
     textAlign: 'center',
-    paddingVertical: 5,
+    paddingVertical: 8,
+    fontWeight: '500',
   },
   dateContainer: {
     marginTop: 5,
@@ -378,9 +391,10 @@ const styles = StyleSheet.create({
   },
   dateBox: {
     width: 70,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: surfaceColor,
+    elevation: 2,
   },
   textContainer: {
     alignItems: 'center',
@@ -389,6 +403,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: textColor,
+    fontSize: 12,
   },
   calendarIcon: {
     paddingVertical: 12,
@@ -396,16 +411,16 @@ const styles = StyleSheet.create({
   },
   note: {
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: 'grey',
-    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderColor: '#E5E7EB',
+    backgroundColor: surfaceColor,
     color: textColor,
-    paddingLeft: 10,
+    padding: 12,
+    fontSize: 16,
   },
   addButton: {
-    padding: 5,
-    marginTop: 10,
-    // borderRadius: 10,
-    // alignSelf: 'center',
+    padding: 6,
+    marginTop: 20,
+    borderRadius: 25,
   },
 });

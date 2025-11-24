@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {categoryColors} from './GlobalStyle';
+import { categoryColors } from './GlobalStyle';
 
 // Make First letter of a word capital letter
 const capitalize = str => {
@@ -8,10 +8,21 @@ const capitalize = str => {
 };
 
 // Capitalize title and add color field for each category
+// Also map backend fields (_id, name) to frontend fields (id, title)
 const handleCategories = categories => {
   categories.map((item, index) => {
-    categories[index].title = capitalize(item.title);
-    categories[index].color = categoryColors[index % categoryColors.length];
+    // Map backend _id to id
+    if (item._id && !item.id) {
+      categories[index].id = item._id.toString();
+    }
+    // Map backend name to title
+    if (item.name && !item.title) {
+      categories[index].title = capitalize(item.name);
+    } else if (item.title) {
+      categories[index].title = capitalize(item.title);
+    }
+    // Assign color
+    categories[index].color = item.color || categoryColors[index % categoryColors.length];
   });
   return categories;
 };
@@ -20,9 +31,11 @@ const handleCategories = categories => {
 const calculateTotalExpense = categories => {
   categories.map((item, index) => {
     let total = 0;
-    item.transactions.map((subItem, subIndex) => {
-      total += subItem.amount;
-    });
+    if (item.transactions && Array.isArray(item.transactions)) {
+      item.transactions.map((subItem, subIndex) => {
+        total += subItem.amount;
+      });
+    }
     categories[index].totalExpense = total;
   });
   return categories;
@@ -32,12 +45,14 @@ const calculateTotalExpense = categories => {
 const getAllTransactions = categories => {
   let data = [];
   categories.map((item, index) => {
-    item.transactions.map((subItem, subIndex) => {
-      subItem['categoryId'] = item.id;
-      subItem['categoryName'] = capitalize(item.title);
-      subItem['color'] = item.color;
-      data.push(subItem);
-    });
+    if (item.transactions && Array.isArray(item.transactions)) {
+      item.transactions.map((subItem, subIndex) => {
+        subItem['categoryId'] = item.id || item._id;
+        subItem['categoryName'] = capitalize(item.title || item.name);
+        subItem['color'] = item.color;
+        data.push(subItem);
+      });
+    }
   });
   return data;
 };
@@ -140,7 +155,7 @@ const lastNMonthsExpenses = (allExpenses, numberOfMonths) => {
     'Nov',
     'Dec',
   ];
-  const result = {months: [], expenses: []};
+  const result = { months: [], expenses: [] };
   let currentMonthNo = new Date().getMonth();
   for (let i = 0; i < numberOfMonths; i++) {
     let month = monthNames[currentMonthNo];

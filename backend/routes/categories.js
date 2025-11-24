@@ -10,10 +10,13 @@ router.get('/', authMiddleware, async (req, res) => {
     try {
         const categories = await Category.find({ userId: req.userId });
 
-        // Get transaction counts and totals for each category
-        const categoriesWithStats = await Promise.all(
+        // Get transactions for each category
+        const categoriesWithTransactions = await Promise.all(
             categories.map(async (category) => {
-                const transactions = await Transaction.find({ categoryId: category._id });
+                const transactions = await Transaction.find({
+                    categoryId: category._id
+                }).sort({ date: -1 });
+
                 const total = transactions.reduce((sum, t) => sum + t.amount, 0);
 
                 return {
@@ -21,13 +24,14 @@ router.get('/', authMiddleware, async (req, res) => {
                     name: category.name,
                     color: category.color,
                     type: category.type,
+                    transactions: transactions,  // Return full transactions array
                     total,
                     transactionCount: transactions.length
                 };
             })
         );
 
-        res.json(categoriesWithStats);
+        res.json(categoriesWithTransactions);
     } catch (error) {
         console.error('Get categories error:', error);
         res.status(500).json({ error: 'Server error' });

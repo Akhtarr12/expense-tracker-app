@@ -1,8 +1,8 @@
 import React from 'react';
-import {Modal, StyleSheet, Text, View, TextInput} from 'react-native';
-import {Button} from 'react-native-paper';
-import {windowWidth} from '../utils/Dimentions';
-import {primaryColor, textColor} from '../utils/GlobalStyle';
+import { Modal, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Button } from 'react-native-paper';
+import { windowWidth } from '../utils/Dimentions';
+import { primaryColor, textColor } from '../utils/GlobalStyle';
 
 const CategoryModal = ({
   payload,
@@ -21,7 +21,7 @@ const CategoryModal = ({
             ) : (
               <Text style={styles.header}>ADD CATEGORY</Text>
             )}
-            <View style={{padding: 20}}>
+            <View style={{ padding: 20 }}>
               <TextInput
                 style={styles.input}
                 value={payload.title}
@@ -37,18 +37,18 @@ const CategoryModal = ({
                 onChangeText={text => handleChange('description', text)}
               />
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
-                style={[styles.button, {borderBottomLeftRadius: 20}]}
+                style={[styles.button, { borderBottomLeftRadius: 20 }]}
                 onPress={handleSave}>
                 Save
               </Button>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
-                style={[styles.button, {borderBottomRightRadius: 20}]}
+                style={[styles.button, { borderBottomRightRadius: 20 }]}
                 onPress={() => handleModalVisibility(false)}>
                 Cancel
               </Button>

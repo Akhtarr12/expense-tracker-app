@@ -181,7 +181,7 @@ const CategoryScreen = ({
                   onChangeText={text => handleSearch(text)}
                 />
                 <Button
-                  color={secondaryColor}
+                  buttonColor={secondaryColor}
                   mode="contained"
                   style={{ alignSelf: 'center', borderRadius: 20 }}
                   labelStyle={{ color: '#fff' }}

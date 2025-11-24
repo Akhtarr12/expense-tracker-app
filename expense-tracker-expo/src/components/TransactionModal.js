@@ -46,14 +46,14 @@ const TransactionModal = ({ item, hideModal, handleUpdate, handleDelete }) => {
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
                 style={[styles.button, { borderBottomLeftRadius: 20 }]}
                 onPress={() => handleUpdate(item)}>
                 Update
               </Button>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
                 style={[styles.button, { borderBottomRightRadius: 20 }]}
                 onPress={() => handleDelete(item)}>

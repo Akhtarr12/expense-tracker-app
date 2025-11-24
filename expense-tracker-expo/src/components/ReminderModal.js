@@ -49,14 +49,14 @@ const ReminderModal = ({ item, handleReminderClick }) => {
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
                 style={[styles.button, { borderBottomLeftRadius: 20 }]}
                 onPress={() => handleClick('Pay')}>
                 Pay
               </Button>
               <Button
-                color={primaryColor}
+                buttonColor={primaryColor}
                 mode="contained"
                 style={[styles.button, { borderBottomRightRadius: 20 }]}
                 onPress={() => handleClick('Decline')}>

@@ -212,6 +212,9 @@ const CategoryScreen = ({
 export default CategoryScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     marginTop: 10,
@@ -228,10 +231,16 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: surfaceColor,
+    borderRadius: 16,
     marginTop: 10,
     marginHorizontal: 10,
+    padding: 5,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   color: {
     marginRight: 10,

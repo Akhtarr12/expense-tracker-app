@@ -1,21 +1,19 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = ({handleToken}) => {
+const AuthStack = ({ handleToken }) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Login" options={{headerShown: false}}>
+      <Stack.Screen name="Login" options={{ headerShown: false }}>
         {props => <LoginScreen handleToken={handleToken} {...props} />}
       </Stack.Screen>
-      <Stack.Screen
-        name="Sign-up"
-        component={SignupScreen}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="Sign-up" options={{ headerShown: false }}>
+        {props => <SignupScreen handleToken={handleToken} {...props} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };

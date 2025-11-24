@@ -13,7 +13,7 @@ import { primaryColor, globalStyle } from '../utils/GlobalStyle';
 import { postService } from '../utils/Api';
 import Loading from '../components/Loading';
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation, handleToken }) => {
   const initialState = {
     firstName: '',
     lastName: '',
@@ -44,7 +44,7 @@ const SignupScreen = ({ navigation }) => {
     if (res.token !== undefined) {
       setData(initialState);
       setIsLoading(false);
-      navigation.goBack();
+      handleToken('Bearer '.concat(res.token));
     } else {
       if (res !== 'Network Error') setErrMsg('Email alreday exists.');
       else setErrMsg('You are not connected to the internet.');

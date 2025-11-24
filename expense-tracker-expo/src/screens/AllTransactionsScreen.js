@@ -179,157 +179,88 @@ const AllTransactionsScreen = ({
       <View style={styles.cardText}>
         <Text style={styles.text}>{item.categoryName}</Text>
         <Text style={{ color: 'grey' }}>
-          {item.note === '' ? 'N/A' : item.note}
-        </Text>
-      </View>
-      <View style={styles.cardAmount}>
-        <Text style={styles.text}>
-          {'\u20B9'}
-          {item.amount}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-
-  return (
-    <View style={styles.container}>
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Loading />
-        </View>
-      ) : (
-        <>
-          {modalItem !== null ? (
-            <TransactionModal
-              item={modalItem}
-              hideModal={hideModal}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
-            />
-          ) : (
-            <View style={{ flex: 1 }}>
-              {route.params === undefined && (
-                <View style={[styles.dateContainer, landscape && { flex: 2 }]}>
-                  <DateTypeSelection
-                    date={date}
-                    sendDateToHome={handleDateFilter}
-                  />
-                </View>
-              )}
-
-              <View style={[styles.dataContainer, landscape && { flex: 3 }]}>
-                <FlatList
-                  data={transactions}
-                  keyExtractor={item => item.id}
-                  renderItem={renderItem}
-                />
+          <View style={styles.card}>
+            <View style={styles.cardContent}>
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>
+                  {dateFormat(item.date)}
+                </Text>
               </View>
-
-              <View style={[styles.footer, landscape && { flex: 1 }]}>
-                <TouchableOpacity
-                  style={[styles.sortButtons, styles.buttonDivider]}
-                  onPress={() => sortTransactions('transactionDate')}>
-                  <Text style={styles.footerText}>Sort by Date</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.sortButtons}
-                  onPress={() => sortTransactions('amount')}>
-                  <Text style={styles.footerText}>Sort by Amount</Text>
-                </TouchableOpacity>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.titleText}>{item.title}</Text>
+                <Text style={styles.categoryText}>{item.categoryName}</Text>
+              </View>
+              <View style={styles.amountContainer}>
+                <Text style={styles.amountText}>
+                  {item.currency} {item.amount}
+                </Text>
               </View>
             </View>
-          )}
-        </>
-      )}
-    </View>
-  );
+          </View>
+          );
+
+          return (
+          <LinearGradient colors={gradientColors} style={styles.container}>
+            <View style={styles.header}>
+              <View style={styles.searchContainer}>
+                <Icon name="magnify" size={24} color={primaryColor} style={styles.searchIcon} />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Search transactions..."
+                  placeholderTextColor="#999"
+                  value={searchText}
+                  onChangeText={handleSearch}
+                />
+              </View>
+              <ExportToExcel data={data} />
+            </View>
+
+            <FlatList
+              data={data}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContent}
+              ListEmptyComponent={
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>No transactions found</Text>
+                </View>
+              }
+            />
+          </LinearGradient>
+          );
 };
 
-export default AllTransactionsScreen;
+          export default AllTransactionsScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: backgroundColor,
+          const styles = StyleSheet.create({
+            container: {
+            flex: 1,
   },
-  footer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    backgroundColor: surfaceColor,
+          header: {
+            padding: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
   },
-  sortButtons: {
-    paddingVertical: 10,
-    width: '50%',
+          searchContainer: {
+            flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: surfaceColor,
+          borderRadius: 25,
+          paddingHorizontal: 12,
+          marginRight: 10,
+          height: 45,
+          elevation: 3,
   },
-  buttonDivider: {
-    borderRightWidth: 1,
-    borderRightColor: '#E5E7EB',
+          searchIcon: {
+            marginRight: 8,
   },
-  footerText: {
-    color: textColor,
-    textAlign: 'center',
-    fontWeight: '500',
+          searchInput: {
+            flex: 1,
+          fontSize: 16,
+          color: textColor,
   },
-  dateContainer: {
-    flex: 2,
-    backgroundColor: surfaceColor,
-    marginVertical: 10,
-    marginHorizontal: 15,
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  dataContainer: {
-    flex: 12,
-    marginHorizontal: 15,
-    marginBottom: 10,
-  },
-  card: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: surfaceColor,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginVertical: 6,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  text: {
-    color: textColor,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cardDate: {
-    flex: 1.2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  divider: {
-    borderRightWidth: 1,
-    height: '80%',
-    marginHorizontal: 10,
-    borderColor: '#E5E7EB',
-  },
-  cardText: {
-    flex: 4,
-    justifyContent: 'center',
-  },
-  cardAmount: {
-    flex: 2,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
+          listContent: {
+            paddingHorizontal: 16,
 });

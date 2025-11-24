@@ -220,207 +220,199 @@ const AddTransactionScreen = ({
                           style={[
                             styles.dateBox,
                             { marginRight: 30 },
-                            selectedDate.toLocaleDateString() ===
-                            tomorrow.toLocaleDateString() && {
-                              backgroundColor: secondaryColor,
-                            },
-                          ]}>
-                          <View style={styles.textContainer}>
-                            <Text style={styles.dateText}>
-                              {dateToString(tomorrow)}
-                            </Text>
-                            <Text style={styles.dateText}>TMR</Text>
-                          </View>
-                        </TouchableOpacity>
-                      ) : (
-                        <>
-                          <TouchableOpacity
-                            onPress={() => handleSelectDate(today)}
-                            style={[
-                              styles.dateBox,
-                              selectedDate.toLocaleDateString() ===
-                              today.toLocaleDateString() && {
-                                backgroundColor: secondaryColor,
-                              },
-                            ]}>
-                            <View style={styles.textContainer}>
-                              <Text style={styles.dateText}>
-                                {dateToString(today)}
-                              </Text>
-                              <Text style={styles.dateText}>Today</Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => handleSelectDate(yesterday)}
-                            style={[
-                              styles.dateBox,
-                              { marginHorizontal: 30 },
-                              selectedDate.toLocaleDateString() ===
-                              yesterday.toLocaleDateString() && {
-                                backgroundColor: secondaryColor,
-                              },
-                            ]}>
-                            <View style={styles.textContainer}>
-                              <Text style={styles.dateText}>
-                                {dateToString(yesterday)}
-                              </Text>
-                              <Text style={styles.dateText}>Yes'day</Text>
-                            </View>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                      {isSelectedDateVisible() && (
-                        <TouchableOpacity
-                          style={[
-                            styles.dateBox,
-                            { backgroundColor: secondaryColor },
-                          ]}>
-                          <View style={styles.textContainer}>
-                            <Text style={styles.dateText}>
-                              {dateToString(selectedDate)}
-                            </Text>
-                            <Text style={styles.dateText}>Selected</Text>
-                          </View>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                    <TouchableOpacity
-                      style={styles.calendarIcon}
-                      onPress={() => {
-                        setShowDatePicker(true);
-                      }}>
-                      <FontAwesome
-                        name="calendar"
-                        size={25}
-                        color={primaryColor}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {showDatePicker && (
-                    <DatePicker
-                      handleSelectDate={handleSelectDate}
-                      showFutureDates={showFutureDates}
-                    />
-                  )}
-                </View>
-                <View style={{ marginVertical: 10 }}>
-                  <Text style={styles.heading}>Note</Text>
-                  <TextInput
-                    value={payload.note}
-                    style={styles.note}
-                    placeholder="Comment"
-                    placeholderTextColor={textColor}
-                    onChangeText={text => handleChange('note', text)}
-                  />
-                </View>
+                            <LinearGradient colors={gradientColors} style={styles.container}>
+                              <ScrollView contentContainerStyle={styles.scrollContent}>
+                                <View style={styles.card}>
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Amount</Text>
+                                    <View style={styles.amountContainer}>
+                                      <Text style={styles.currencySymbol}>₹</Text>
+                                      <TextInput
+                                        style={styles.amountInput}
+                                        placeholder="0"
+                                        placeholderTextColor="#ccc"
+                                        keyboardType="numeric"
+                                        value={amount}
+                                        onChangeText={setAmount}
+                                      />
+                                    </View>
+                                  </View>
 
-                {errMsg.trim().length !== 0 && (
-                  <Text style={globalStyle.error}>{errMsg}</Text>
-                )}
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Title</Text>
+                                    <TextInput
+                                      style={styles.input}
+                                      placeholder="What is this for?"
+                                      placeholderTextColor="#999"
+                                      value={title}
+                                      onChangeText={setTitle}
+                                    />
+                                  </View>
 
-                <Button
-                  mode="contained"
-                  color={primaryColor}
-                  style={styles.addButton}
-                  onPress={handleSubmit}>
-                  Save
-                </Button>
-              </>
-            }
-          />
-        </View>
-      )}
-    </View>
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Category</Text>
+                                    <TouchableOpacity
+                                      style={styles.categorySelector}
+                                      onPress={() => setModalVisible(true)}>
+                                      <View style={[styles.colorDot, { backgroundColor: category.color }]} />
+                                      <Text style={styles.categoryText}>{category.title}</Text>
+                                      <Icon name="chevron-down" size={24} color="#999" />
+                                    </TouchableOpacity>
+                                  </View>
+
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Date</Text>
+                                    <TouchableOpacity
+                                      style={styles.dateSelector}
+                                      onPress={() => setShowDatePicker(true)}>
+                                      <Icon name="calendar" size={24} color={primaryColor} />
+                                      <Text style={styles.dateText}>{dateFormat(date)}</Text>
+                                    </TouchableOpacity>
+                                  </View>
+
+                                  {showDatePicker && (
+                                    <DateTimePicker
+                                      value={date}
+                                      mode="date"
+                                      display="default"
+                                      onChange={onDateChange}
+                                      maximumDate={showFutureDates ? undefined : new Date()}
+                                    />
+                                  )}
+
+                                  <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Note (Optional)</Text>
+                                    <TextInput
+                                      style={[styles.input, styles.textArea]}
+                                      placeholder="Add a note..."
+                                      placeholderTextColor="#999"
+                                      value={note}
+                                      onChangeText={setNote}
+                                      multiline
+                                    />
+                                  </View>
+
+                                  <Button
+                                    mode="contained"
+                                    onPress={handleSave}
+                                    loading={loading}
+                                    style={styles.saveButton}
+                                    labelStyle={styles.saveButtonLabel}>
+                                    Save Transaction
+                                  </Button>
+                                </View>
+                              </ScrollView>
+
+                              <CategoryModal
+                                modalVisible={modalVisible}
+                                setModalVisible={setModalVisible}
+                                setCategory={setCategory}
+                              />
+
+                              <Snackbar
+                                visible={snackbarVisible}
+                                onDismiss={() => setSnackbarVisible(false)}
+                                duration={2000}
+                                style={{ backgroundColor: secondaryColor }}>
+                                {snackbarMessage}
+                              </Snackbar>
+                            </LinearGradient>
   );
 };
 
-export default AddTransactionScreen;
+                      export default AddTransactionScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: backgroundColor,
+                      const styles = StyleSheet.create({
+                        container: {
+                        flex: 1,
   },
-  heading: {
-    color: textColor,
-    fontSize: 18,
-    marginBottom: 5,
-    fontWeight: '600',
+                      scrollContent: {
+                        padding: 16,
   },
-  amountField: {
-    backgroundColor: surfaceColor,
-    width: 120,
-    borderBottomWidth: 2,
-    borderBottomColor: primaryColor,
-    fontSize: 24,
-    textAlign: 'center',
-    color: textColor,
-    borderRadius: 8,
-    paddingVertical: 8,
+                      card: {
+                        backgroundColor: surfaceColor,
+                      borderRadius: 20,
+                      padding: 20,
+                      elevation: 5,
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 4 },
+                      shadowOpacity: 0.2,
+                      shadowRadius: 8,
   },
-  categoryBox: {
-    borderWidth: 1,
-    borderRadius: 12,
-    marginVertical: 5,
-    width: 85,
-    backgroundColor: surfaceColor,
-    elevation: 2,
+                      inputGroup: {
+                        marginBottom: 20,
   },
-  addCategoryBox: {
-    borderRadius: 12,
-    marginVertical: 5,
-    justifyContent: 'center',
-    padding: 2,
-    backgroundColor: secondaryColor,
-    elevation: 2,
+                      label: {
+                        fontSize: 14,
+                      color: '#777',
+                      marginBottom: 8,
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: 1,
   },
-  categoryText: {
-    color: textColor,
-    textAlign: 'center',
-    paddingVertical: 8,
-    fontWeight: '500',
+                      amountContainer: {
+                        flexDirection: 'row',
+                      alignItems: 'center',
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#eee',
+                      paddingBottom: 5,
   },
-  dateContainer: {
-    marginTop: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+                      currencySymbol: {
+                        fontSize: 32,
+                      color: primaryColor,
+                      fontWeight: 'bold',
+                      marginRight: 5,
   },
-  dateBoxes: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+                      amountInput: {
+                        fontSize: 32,
+                      color: primaryColor,
+                      fontWeight: 'bold',
+                      flex: 1,
   },
-  dateBox: {
-    width: 70,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: surfaceColor,
-    elevation: 2,
+                      input: {
+                        backgroundColor: '#F9F9F9',
+                      borderRadius: 10,
+                      padding: 15,
+                      fontSize: 16,
+                      color: textColor,
+                      borderWidth: 1,
+                      borderColor: '#eee',
   },
-  textContainer: {
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 5,
+                      textArea: {
+                        height: 80,
+                      textAlignVertical: 'top',
   },
-  dateText: {
-    color: textColor,
-    fontSize: 12,
+                      categorySelector: {
+                        flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F9F9F9',
+                      borderRadius: 10,
+                      padding: 15,
+                      borderWidth: 1,
+                      borderColor: '#eee',
   },
-  calendarIcon: {
-    paddingVertical: 12,
-    marginRight: 3,
+                      colorDot: {
+                        width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                      marginRight: 10,
   },
-  note: {
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: '#E5E7EB',
-    backgroundColor: surfaceColor,
-    color: textColor,
-    padding: 12,
-    fontSize: 16,
+                      categoryText: {
+                        fontSize: 16,
+                      color: textColor,
+                      flex: 1,
   },
-  addButton: {
-    padding: 6,
-    marginTop: 20,
-    borderRadius: 25,
+                      dateSelector: {
+                        flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F9F9F9',
+                      borderRadius: 10,
+                      padding: 15,
+                      borderWidth: 1,
+                      borderColor: '#eee',
+  },
+                      dateText: {
+                        marginTop: 20,
+                      borderRadius: 25,
   },
 });

@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import CategoryModal from '../components/CategoryModal';
 import Loading from '../components/Loading';
 import { windowWidth } from '../utils/Dimentions';
-import { globalStyle, primaryColor } from '../utils/GlobalStyle';
-import { textColor } from '../utils/GlobalStyle';
+import {
+  globalStyle,
+  primaryColor,
+  textColor,
+  backgroundColor,
+  surfaceColor,
+  gradientColors,
+  secondaryColor,
+} from '../utils/GlobalStyle';
 
 const CategoryScreen = ({
   categories,
@@ -17,6 +25,7 @@ const CategoryScreen = ({
   let initialState = {
     title: '',
     description: '',
+    color: '#FF5733', // Default color
   };
 
   const [errMsg, setErrMsg] = useState('');
@@ -27,11 +36,15 @@ const CategoryScreen = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSearch = text => {
-    setData(
-      categories.filter(
-        item => item.title.toLowerCase().indexOf(text.toLowerCase()) !== -1,
-      ),
-    );
+    if (text.trim() === '') {
+      setData(categories);
+    } else {
+      setData(
+        categories.filter(
+          item => item.title.toLowerCase().indexOf(text.toLowerCase()) !== -1,
+        ),
+      );
+    }
   };
 
   const handleChange = (key, value) => {
@@ -41,69 +54,76 @@ const CategoryScreen = ({
   const handleModalVisibility = flag => {
     setPayload(initialState);
     setModalVisible(flag);
+    setErrMsg('');
   };
 
   const handleSubmit = async () => {
-    setModalVisible(false);
-    setIsLoading(true);
-
     if (payload.title.trim() === '') {
-      setErrMsg('Fill the title.');
-      setIsLoading(false);
+      setErrMsg('Please enter a title.');
       return;
     }
 
-    let isSuccessful;
-    if (isUpdate) {
-      isSuccessful = await updateCategory(payload);
-      setIsUpdate(false);
-    } else {
-      isSuccessful = await addCategory(payload);
-    }
+    setModalVisible(false);
+    setIsLoading(true);
+    setErrMsg('');
 
-    if (isSuccessful === true) {
-      setPayload(initialState);
-    } else {
-      setErrMsg('Problem occured. Please try again later.');
+    try {
+      let isSuccessful;
+      if (isUpdate) {
+        isSuccessful = await updateCategory(payload);
+        setIsUpdate(false);
+      } else {
+        isSuccessful = await addCategory(payload);
+      }
+
+      if (isSuccessful) {
+        setPayload(initialState);
+      } else {
+        setErrMsg('Failed to save category. Please try again.');
+      }
+    } catch (error) {
+      console.error("Category submit error:", error);
+      setErrMsg('An unexpected error occurred.');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleDelete = async id => {
     setIsLoading(true);
-    const isDeleted = await deleteCategory(id);
-    if (isDeleted === false) {
-      Alert.alert(
-        'Error!',
-        'Problem deleting category. Please try again later.',
-        [
-          {
-            text: 'Ok',
-          },
-        ],
-        { cancelable: true },
-      );
+    try {
+      const isDeleted = await deleteCategory(id);
+      if (!isDeleted) {
+        Alert.alert(
+          'Error',
+          'Could not delete category. It might be in use or network issue.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      console.error("Delete category error:", error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleUpdate = item => {
     setIsUpdate(true);
     setPayload(item);
     setModalVisible(true);
+    setErrMsg('');
   };
 
   const handleAdd = () => {
     setIsUpdate(false);
     setPayload(initialState);
     setModalVisible(true);
+    setErrMsg('');
   };
 
   useEffect(() => {
     setData(categories);
-    return () => {
-      setData([]);
-    };
   }, [categories]);
 
   const renderItem = ({ item }) => (
@@ -116,19 +136,19 @@ const CategoryScreen = ({
           alignItems: 'center',
         }}>
         <View style={[styles.color, { backgroundColor: item.color }]} />
-        <Text style={{ color: textColor, fontSize: 15 }}>{item.title}</Text>
+        <Text style={{ color: textColor, fontSize: 16, fontWeight: '500' }}>{item.title}</Text>
       </View>
       <View style={styles.iconsContainer}>
         <Icon
-          size={25}
+          size={24}
           color="#0096FF"
-          name="square-edit-outline"
+          name="pencil-outline"
           onPress={() => handleUpdate(item)}
         />
         <Icon
-          size={25}
+          size={24}
           color="#D11A2A"
-          name="delete"
+          name="trash-can-outline"
           onPress={() => handleDelete(item.id)}
         />
       </View>
@@ -136,7 +156,7 @@ const CategoryScreen = ({
   );
 
   return (
-    <>
+    <LinearGradient colors={gradientColors} style={styles.container}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Loading />
@@ -152,20 +172,21 @@ const CategoryScreen = ({
               handleModalVisibility={handleModalVisibility}
             />
           ) : (
-            <View>
+            <View style={{ flex: 1 }}>
               <View style={styles.header}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Search"
-                  placeholderTextColor="grey"
+                  placeholder="Search Categories"
+                  placeholderTextColor="#999"
                   onChangeText={text => handleSearch(text)}
                 />
                 <Button
-                  color={primaryColor}
+                  color={secondaryColor}
                   mode="contained"
-                  style={{ alignSelf: 'center' }}
+                  style={{ alignSelf: 'center', borderRadius: 20 }}
+                  labelStyle={{ color: '#fff' }}
                   onPress={handleAdd}>
-                  Add
+                  + Add
                 </Button>
               </View>
               {errMsg.trim().length !== 0 && (
@@ -174,16 +195,17 @@ const CategoryScreen = ({
                 </Text>
               )}
               <FlatList
-                style={{ marginTop: 5 }}
+                style={{ marginTop: 10 }}
                 data={data}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
+                contentContainerStyle={{ paddingBottom: 20 }}
               />
             </View>
           )}
         </>
       )}
-    </>
+    </LinearGradient>
   );
 };
 

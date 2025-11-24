@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useDeviceOrientation } from '@react-native-community/hooks';
 import { FAB } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
 import DateTypeSelection from '../components/DateTypeSelection';
 import {
   getAllTransactions,
@@ -23,6 +24,8 @@ import {
   surfaceColor,
   textColor,
   accentColor,
+  gradientColors,
+  secondaryColor,
 } from '../utils/GlobalStyle';
 
 const HomeScreen = ({ reload, allCategories, navigation }) => {
@@ -90,12 +93,12 @@ const HomeScreen = ({ reload, allCategories, navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={gradientColors} style={styles.container}>
       <FlatList
         data={categories}
         keyExtractor={item => item.id}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={surfaceColor} />
         }
         ListHeaderComponent={ListHeader}
         renderItem={({ item }) => (
@@ -112,7 +115,7 @@ const HomeScreen = ({ reload, allCategories, navigation }) => {
         color="white"
         onPress={handleButtonPress}
       />
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -121,13 +124,12 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: backgroundColor,
   },
   listContent: {
     paddingBottom: 80, // Space for FAB
   },
   dateContainer: {
-    backgroundColor: surfaceColor,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Glassmorphism
     margin: 16,
     borderRadius: 16,
     padding: 10,
@@ -147,16 +149,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: textColor,
+    color: '#fff', // White text on gradient
     fontFamily: 'Roboto',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: primaryColor,
+    backgroundColor: secondaryColor, // Gold FAB
   },
 });

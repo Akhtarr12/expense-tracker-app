@@ -23,10 +23,9 @@ import {
   gradientColors,
 } from '../utils/GlobalStyle';
 import CategoryModal from '../components/CategoryModal';
-import { addTransaction, updateTransaction } from '../utils/Api';
 import { dateFormat } from '../utils/HelperFunctions';
 
-const AddTransactionScreen = ({ navigation, route }) => {
+const AddTransactionScreen = ({ navigation, route, categories, addTransaction, updateTransaction }) => {
   const { name, transaction, showFutureDates } = route.params || {};
   const isUpdate = name === 'Update Transaction';
 
@@ -52,21 +51,19 @@ const AddTransactionScreen = ({ navigation, route }) => {
     }
 
     setLoading(true);
+    // Backend expects: amount, description, date
     const payload = {
-      title,
       amount: parseFloat(amount),
-      categoryId: category.id,
+      description: note || title,
       date,
-      note,
-      type: 'Expense', // Defaulting to Expense for now
     };
 
     try {
       let result;
       if (isUpdate) {
-        result = await updateTransaction(transaction.id, payload);
+        result = await updateTransaction(payload, category.id, transaction.id);
       } else {
-        result = await addTransaction(payload);
+        result = await addTransaction(payload, category.id);
       }
 
       if (result) {

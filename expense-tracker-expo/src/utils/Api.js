@@ -117,4 +117,30 @@ const deleteService = async (method, token, categoryId, transactionId) => {
   }
 };
 
-export { getService, postService, putService, deleteService };
+// Add Transaction wrapper
+const addTransaction = async (transaction) => {
+  const categoryId = transaction.categoryId;
+  const data = {
+    amount: transaction.amount,
+    description: transaction.note || transaction.title,
+    date: transaction.date
+  };
+
+  const token = ''; // Token should be passed
+  return await postService('TRANSACTIONS_API', token, data, categoryId);
+};
+
+// Update Transaction wrapper  
+const updateTransaction = async (transactionId, transaction) => {
+  const categoryId = transaction.categoryId;
+  const data = {
+    amount: transaction.amount,
+    description: transaction.note || transaction.title,
+    date: transaction.date
+  };
+
+  const token = ''; // Token should be passed
+  return await putService('TRANSACTIONS_API', token, data, categoryId, transactionId);
+};
+
+export { getService, postService, putService, deleteService, addTransaction, updateTransaction };
